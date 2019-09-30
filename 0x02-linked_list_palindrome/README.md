@@ -1,0 +1,1 @@
+### Determine if a linked list contains a palindrome.
