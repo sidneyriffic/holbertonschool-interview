@@ -23,6 +23,6 @@ def rain(walls):
         water += walls[widx] * (leftstack[sidx + 1] - widx)
     for sidx, widx in enumerate(rightstack[:-1]):
         water += walls[widx] * (-rightstack[sidx + 1] + widx)
-    water += ((len(walls) + 1 + rightstack[-1] - leftstack[-1])
-              * walls[leftstack[-1]])
+    water += ((len(walls) + 1 + rightstack[-1] - leftstack[-1]) *
+              walls[leftstack[-1]])
     return water - sum(walls)
