@@ -2,7 +2,7 @@
 
 const request = require('request');
 
-const apiurl = 'https://swapi.co/api/films/' + process.argv.slice(2) + '/';
+const apiurl = 'https://swapi.dev/api/films/' + process.argv.slice(2) + '/';
 
 const promises = [];
 
