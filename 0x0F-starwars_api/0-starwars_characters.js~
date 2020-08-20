@@ -1,0 +1,18 @@
+#!/usr/bin/node
+
+var request = require('request');
+
+var apiurl = 'https://swapi.co/api/films/' + process.argv.slice(2) + '/';
+
+request(apiurl, function (error, response, body) {
+  if (error) {
+  }
+  var characters = JSON.parse(body).characters;
+  for (var url in characters) {
+    request(characters[url], function (error, response, body) {
+	  if (error) {
+	  }
+      console.log(JSON.parse(body).name);
+    });
+  }
+});
