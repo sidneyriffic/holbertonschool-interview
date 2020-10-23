@@ -51,13 +51,19 @@ void swap_down(heap_t *parent, heap_t *child)
 	if (child->left == child)
 	{
 		child->left = parent;
-		child->right->parent = child;
+		if (child->right != NULL)
+			child->right->parent = child;
 	}
 	else
 	{
 		child->right = parent;
-		child->left->parent = child;
+		if (child->left != NULL)
+			child->left->parent = child;
 	}
+	if (parent->left != NULL)
+		parent->left->parent = parent;
+	if (parent->right != NULL)
+		parent->right->parent = parent;
 	if (child->parent != NULL)
 	{
 		if (child->parent->left == parent)
@@ -111,23 +117,40 @@ void sift_down(heap_t *tree)
 int heap_extract(heap_t **tree)
 {
 	heap_t *last, *root = *tree;
-	int retval = root->n;
+	int retval;
 
 	if (tree == NULL || *tree == NULL)
 		return (0);
+	retval = root->n;
 	last = get_last(root);
+	if (root == last)
+	{
+		free(root);
+		*tree = NULL;
+		return (retval);
+	}
 	if (last->parent->left == last)
 		last->parent->left = NULL;
 	else
 		last->parent->right = NULL;
 	last->parent = root->parent;
-	last->left = root->left;
 	last->right = root->right;
+	last->left = root->left;
+	if (last->right == last)
+		last->right = NULL;
+	else if (last->left == last)
+		last->left = NULL;
+	if (last->left != NULL)
+		last->left->parent = last;
+	if (last->right != NULL)
+		last->right->parent = last;
 	free(root);
 	root = last->parent;
 	sift_down(last);
 	while (last->parent != root)
+	{
 		last = last->parent;
+	}
 	*tree = last;
 	return (retval);
 }
