@@ -32,65 +32,44 @@ void print_array(const int *array, size_t size)
  */
 void merge_sort(int *array, size_t size)
 {
-	int *left, *right, ltemp, rtemp, *buffer, bufsize, lsize, rsize;
+	int *left, *right, *start = array;
+	size_t lsize = size / 2, rsize = size / 2 + size % 2;
+	static int *buffer, idx, i;
 
-	printf("size level %ld\n", size);
-	if (array == NULL)
+	if (array == NULL || size <= 1)
 		return;
-	if (size <= 1)
-		return;
-	lsize = size / 2;
-	rsize = size / 2 + size % 2;
+	if (buffer == NULL)
+		buffer = malloc(sizeof(int) * size);
 	merge_sort(array, lsize);
 	merge_sort(array + lsize, rsize);
-	printf("Bottom lsize %d rsize %d\n", lsize, rsize);
 	left = array;
 	right = array + lsize;
-	printf("Merging...\n");
-	printf("[left]: ");
+	printf("Merging...\n[left]: ");
 	print_array(left, lsize);
 	printf("[right]: ");
 	print_array(right, rsize);
-	bufsize = 0;
-	buffer = right + size % 2 + 1;
-	ltemp = *left;
-	left++;
-	rtemp = *right;
-	right++;
-	while (rsize > 0 && lsize > 0)
+	for (idx = 0; lsize > 0 && rsize > 0; idx++)
 	{
-		printf("rtemp %d ltemp %d buffer %d\n", rtemp, ltemp, *buffer);
-		if (rtemp < ltemp)
+		if (*left < *right)
 		{
-			*array = rtemp;
-			right++;
-			rsize--;
-			rtemp = *right;
-			if (array >= left)
-			{
-				*(buffer + bufsize) = *array;
-				bufsize++;
-			}
+			buffer[idx] = *left;
+			left++;
+			lsize--;
 		}
 		else
 		{
-			*array = ltemp;
-			left++;
-			lsize--;
-			if (bufsize)
-			{
-				ltemp = *buffer;
-				buffer++;
-				bufsize--;
-			}
-			else
-				ltemp = *left;
+			buffer[idx] = *right;
+			right++;
+			rsize--;
 		}
-		array++;
 	}
-	printf("done with sorting\n");
-	for (*array = ltemp; lsize > 0; array++, buffer++)
-		*array = *buffer;
+	idx--;
+	for (i = idx + 1; lsize; lsize--, left++, i++)
+		array[i] = *left;
+	for (i = idx + 1; rsize; rsize--, right++, i++)
+		array[i] = *right;
+	for (; idx >= 0; idx--)
+		array[idx] = buffer[idx];
 	printf("[Done]: ");
-	print_array(array, size);
+	print_array(start, size);
 }
