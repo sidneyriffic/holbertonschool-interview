@@ -10,14 +10,19 @@
  */
 void merge_sort(int *array, size_t size)
 {
-	int *left, *right, *start = array;
+	int *left, *right, *start = array, top;
 	size_t lsize = size / 2, rsize = size / 2 + size % 2;
-	static int *buffer, idx, i;
+	static int *buffer, *alloc, idx, i;
 
 	if (array == NULL || size <= 1)
 		return;
+	top = 0;
 	if (buffer == NULL)
+	{
+		top = 1;
 		buffer = malloc(sizeof(int) * size);
+	}
+	alloc = buffer;
 	merge_sort(array, lsize);
 	merge_sort(array + lsize, rsize);
 	left = array;
@@ -50,4 +55,6 @@ void merge_sort(int *array, size_t size)
 		array[idx] = buffer[idx];
 	printf("[Done]: ");
 	print_array(start, size);
+	if (top)
+		free(alloc);
 }
