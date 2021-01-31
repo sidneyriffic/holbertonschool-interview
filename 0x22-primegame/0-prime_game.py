@@ -30,7 +30,7 @@ def isWinner(x, nums):
         return None
     i = 0
     for n in nums:
-        if i == x:
+        if i >= x:
             break
         winners[len(primes_list(n)) % 2] += 1
         i += 1
